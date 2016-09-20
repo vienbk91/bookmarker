@@ -1,0 +1,406 @@
+Từ ngày 20160830 mình bắt đầu tìm hiểu framework cakephp3.3
+Bắt đầu từ tutorial của document:
++ http://book.cakephp.org/3.0/en/tutorials-and-examples/bookmarks/intro.html 
+Kể từ phiên bản 3.x trở đi CakePHP đã có nhiều sự thay đổi trong thiết kế, được hỗ trợ 1 cách mạnh mẽ và linh hoạt hơn, đặc biết khi sử dụng với composer(trong các phiên bản 3.x trở đi thì cài đặt componer là cần thiết)
+
+Trước hết mình sẽ cài đặt xampp , mình đang sử dụng Xampp Version 5.6.8
+Xampp là 1 phần mềm tổng hợp bao gồm Apache, MySQL , PHP
+Cài đặt xampp
+-   Phiên bản 5.6.8
+-   PHP version: 5.6.8
+-   Apache: 2.4.12
+-   MySQL 5.0.11
+ 
+
+Trước hết ta sẽ đi làm từng bước trong Tutorial
+1.  Bookmarker Tutorial
+Ở tutorial này, ta sẽ đi tạo 1 ứng dụng đơn giản tên là bookmarker. 
+Và yêu cầu đó là phiên bản PHP của máy chủ phải từ version 5.5.9 trở lên 
+(Do phiên bản cakephp được sử dụng trong 3.xlà từ 5.4.16 trở lên nhưng trong 3.3 thì yêu cầu 5.5.9 trở lên 
+nên phiên bản PHP của máy chủ cũng phải từ 5.5.9 trở lên thì ứng dụng mới có thể hoạt động được.)
+
+Trước hết ta sẽ đi vào cài đặt CakePHP. Cách dễ nhất để cài đặt CakePHP đó là sử dụng Composer bằng thiết bị dòng lệnh.
+Sau khi tìm hiểu cách tạo 1 project CakePHP bằng Composer ta sẽ làm các bước như sau:
++ Đây là thư mục htdocs của xampp sau khi được cài đặt. Đây là thư mục thực thi mã nguồn(tương tự như htdocs trong apache), 
+chính vì thế mà khi thực thi với xampp, tất cả mã nguồn sẽ được đặt tại đây.
+
+ 
+1.1.    Cài đặt componer với Xampp
+Bây giờ ta sẽ vào trang chủ của Composer-> Getting Started -> Locally -> Click vào link: the Dowload Page và nó sẽ đưa ta đến đường dẫn sau:
+https://getcomposer.org/download/ 
+Tại đây bạn sẽ thấy có 2 cách cài đặt và sử dụng file exe để cài trực tiếp hoặc dùng commandline để cài bằng dòng lệnh. Tôi sử dụng commandline
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('SHA384', 'composer-setup.php') === 'e115a8dc7871f15d853148a7fbac7da27d6c0030b848d9b3dc09e2a0388afed865e6a3d6b3c0fad45c48e2b5fc1196ae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Bây giờ ta chỉ việc bật chế độ Shell của Xampp, di chuyển tới thư mục htdocs 
+(chương trình Shell mặc định root tại thư mục cài đặt xampp nên ta cần di chuyển tới thư mục htdocs ở bên trong nó )
+>cd htdocs
+Parse đoạn mã trên vào, nó sẽ thực thi từng dòng lệnh 1 như sau
+
+> php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+> php -r "if (hash_file('SHA384', 'composer-setup.php') === 'e115a8dc7871f15d853148a7fbac7da27d6c0030b848d9b3dc09e2a0388afed865e6a3d6b3c0fad45c48e2b5fc1196ae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+> php composer-setup.php
+> php -r "unlink('composer-setup.php');"
+
+Và đây là kết quả thực thi
+ 
+Bây giờ bên trong thư mục htdocs sẽ xuất hiện 1 file đó là Conposer.phar , đây chính là file thực thi của conposer
+ 
+1.2.    Tạo project bookmarker
+Tiếp theo ta sẽ sử dụng composer để tạo 1 project tên là bookmarker. Vẫn tiếp tục bằng chương trình Shell Command của Xampp, ta thực thi lệnh sau:
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+php composer.phar create-project --prefer-dist cakephp/app bookmarker
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+Sau khi đợi nó tự động install các package cần thiết thì nó sẽ hỏi bạn có muốn thiết lập quyền sở hữu (folder permissions) cho folder “app/config” hay không? Bạn hãy chọn y
+Như vậy bây giờ trong thư mục htdocs đã tự động sinh ra 1 project có tên là “bookmarker” 
+ 
+Và đây là cấu trúc project bookmarker vừa được tạo ra
+ 
+** Cấu trúc của project CakePHP3.x
+Tham khảo tài liệu: http://book.cakephp.org/3.0/ja/intro/cakephp-folder-structure.html 
+    Đây là cấu trúc 1 project cakephp3.x
++ Thư mục bin: Là folder chứa các cake console có tính thực thi
++ Thư mục config: Là nơi cakePHP chứa các file thiết lập như là kết nối database , bootstrap và các file thiết lập core
++ Thư mục plugins: Là nơi chứa các plugins được sử dụng trong application
++ Thư mục src: Đây là nơi chúng ta xây dựng source cho ứng dụng.
++ Thư mục tests: Là nơi chứa các test case sử dụng cho ứng dụng
++ Thư mục tmp: Là nơi chứa data tạm thời của CakePHP
++ Thư mục vendor: Là nơi chứa các library không chỉ của cake mà còn của các ứng dụng khác. Thư mục này là thư mục chứa core của chương trình nên vì thê không được tùy ý chỉnh sửa nếu không hiểu sâu sắc về CakePHP.
++ Thư mục webroot: Là nơi chứa public document root của ứng dụng
+
+Tiếp theo ta sẽ đi kiểm tra cài đặt bằng cách sử dụng mã lệnh sau:
+$>cd bookmarker # Di chuyển vào bên trong thư mục của project
+$bookmarker>bin\cake server
+ 
+Như vậy bạn đã build 1 project cakephp tại localhost với port là 8765
+Truy cập: http://localhost:8765/ để xem kết quả, nếu kết quả hiển thị ra default page của cakephp thì nghĩa là bạn đã config đúng rồi. Ngoài ra bạn có thể chạy trực tiếp bằng port default của xampp bằng cách truy cập đường dẫn sau đây 
+http://localhost/bookmarker 
+
+1.3.    Tạo cơ sở dữ liệu
+Khởi động phpmyadmin và tạo 1 database có tên: 
+Thực hiện sql sau:
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created DATETIME,
+    modified DATETIME
+);
+
+CREATE TABLE bookmarks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(50),
+    description TEXT,
+    url TEXT,
+    created DATETIME,
+    modified DATETIME,
+    FOREIGN KEY user_key (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    created DATETIME,
+    modified DATETIME,
+    UNIQUE KEY (title)
+);
+
+CREATE TABLE bookmarks_tags (
+    bookmark_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    PRIMARY KEY (bookmark_id, tag_id),
+    FOREIGN KEY tag_key(tag_id) REFERENCES tags(id),
+    FOREIGN KEY bookmark_key(bookmark_id) REFERENCES bookmarks(id)
+);
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Mở project trong 1 IDE nào đó và chỉnh sửa file config như sau:
+'Datasources' => [
+        'default' => [
+            'className' => 'Cake\Database\Connection',
+            'driver' => 'Cake\Database\Driver\Mysql',
+            'persistent' => false,
+            'host' => 'localhost', // Localhost vì chương trình đang chạy trên webserver xampp đặt tại máy
+            //'port' => 'non_standard_port_number',
+            'username' => 'root', // Mặc định là root, có thể tùy chỉnh theo config
+            'password' => '', // Hiện tại xampp không đặt password, có thể tùy chỉnh nếu muốn
+            'database' => 'cake_bookmarks', // Tên của database 
+            'encoding' => 'utf8', // Hiển thị với dữ liệu như tiếng Nhật , tiếng Việt, ...
+            'timezone' => 'UTC',
+            'flags' => [],
+            'cacheMetadata' => true,
+            'log' => false,
+            'quoteIdentifiers' => false,
+            //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
+            'url' => env('DATABASE_URL', null),
+        ],
+
+Như vậy là trên trang home page đã không còn thông báo lỗi.
+
+1.4. Thực hiện tạo mã Scaffold (mã khung)
+Bởi vì database được thiết kế theo những quy ước của CakePHP, 
+cho nên ta có thể sử dụng chương trình “bake console” để sinh ra một cách nhanh chóng 
+một chương trình đơn giản. Ta thực thi các lệnh sau:
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# cd htdocs/bookmarker
+# bin\cake bake all users
+# bin\cake bake all bookmarks
+# bin\cake bake all tags
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Gõ từng lệnh như ở trên và theo dõi kết quả
+Bây giờ ta sẽ khởi động server một lần nữa và xem kết quả
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# bin\cake server
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Truy cập vào đường dẫn: http://localhost:8765/bookmarks/ 
+Thật sự kì diệu phải không.
+
+Ta sẽ đi phân tích mã được sinh ra và luồng xử lý của nó trong project CakePHP
+/bookmarker/src/Controller ( = app/Controller/)
+Ta để ý các controller được sinh ra theo tên của table trong database, 
+tên đều viết hoa các chữ cài đầu, theo số nhiều và có đuôi là Controller.
+Đây là cách đặt tên file Controller trong CakePHP3.x.
++ AppController: Đây là controller có sẵn của CakePHP , mọi controller sử dụng đều được kế thừa từ nó 
++ TagsController: 
++ UsersController:
++ BookmarksController
+
+/bookmarker/src/Model/Table & /bookmarker/src/Model/Entity ( = app/Model/)
+Không giống như CakePHP2.x , từ 3.x trở đi, Model sẽ được chia làm 2 phần Table và Entity
+Trong CakePHP , Model đươch chia thành 2 loại chính:
++ Table Object: Thực thi chức năng CRUD cho data (create ,read , update , delete) , 
+định nghĩa các quan hệ kết hợp ( hasOne , hasMany , belongsTo , hasAndBelongsToMany ,… ) , 
+định nghĩa các Validation của data (Nói chung thì Table Object có chức năng tương tự với class Model trong các phiên bản 2.x)
++ Entities Object: Lớp sinh ra để thực thi việc truy cập tới các record là kết quả trả về của việc thực thi các query truy vấn.
+
+Tóm lại thì Table Object sẽ xử lý việc động chạm và quan hệ của data, Entities Object sẽ xử lý việc sử dụng data. 
+↓
+Thực ra cũng khá khó hiểu việc phân chia này, nhưng tạm thời ta cứ chấp nhận và làm theo tutorial
+
+
+/bookmarker/src/Template ( = app/View/ )
+Thay vì sử dụng thư mục View như trong CakePHP2.x , từ 3.x trở lên, tất cả view sẽ được viết trong Template và view default cũng được đặt trong thư
+mục Template/Layout/default.ctp (Đây sẽ là nơi ta chỉnh sửa, thêm css cho application)
+
+
+
+Ta sẽ đi xây dựng 1 ứng dụng note tương ứng bằng cách đọc hiểu các chức năng thêm , sửa , xóa , tạo mới được xây dựng sẵn
+của các mục Tags , Bookmarks và Users
+
+Trước hết ta tạo database: 
+/* Tạo database demo */
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CREATE TABLE IF NOT EXISTS notes (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  title varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  content text COLLATE utf8_unicode_ci NOT NULL,
+  created datetime DEFAULT NULL,
+  modified datetime DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+
+INSERT INTO notes (id, title, content, created, modified) VALUES
+(1, 'Cấu trúc và chức năng một số thư mục chính trong source code CakePHP', '- app: chứa source project\r\n  + Config: chứa toàn bộ nội dung config của website(core - debug, mã hóa, cache , admin, session; route - rewrite link; database...)\r\n  + Model: chứa các model tương ứng với các bảng trong csdl\r\n  + Controller: chứa controller, viết action xử lý trong controller\r\n  + View: chứa view và các layout dàn trang(Layouts, Errors, Elements...)\r\n  + webroot: chứa css, js, img\r\n  + Plugins\r\n  + Vendors\r\n  + Và một số thư mục khác\r\n- lib: chứa source cakephp(trong lib chứa Cake/)', '2013-01-13 09:12:48', '2013-03-04 01:47:37'),
+(2, 'Cài đặt CakePHP', 'Có 2 cách cài đặt là cài đặt theo cách thông thường bằng tay và cài đặt từ giao diện dòng lệnh.\r\nCài đặt bằng tay:\r\n  + down source code từ cakephp.org\r\n  + copy vào www của wamp\r\n  + tạo csdl\r\n  + edit file database.php\r\n  + edit file core.php\r\n- Cài đặt từ giao diện dòng lệnh:\r\n  + dùng 1 source code cakephp để làm thư mục gốc\r\n  + Thiết lập biến môi trường để chạy Cake Console\r\n  + Cài đặt CakePHP từ giao diện dòng lệnh', '2013-01-13 10:20:48', '2013-01-13 10:20:48'),
+(3, 'Mô hình MVC trong CakePHP', '- Giới thiệu sơ lược mô hình MVC\r\n- Chức năng của Model - View - Controller trong CakePHP\r\n- Cách thức hoạt động của Mô hình MVC trong CakePHP', '2013-01-13 09:12:48', '2013-01-28 12:57:40'),
+(4, 'Tạo website đơn giản bằng CakePHP - ChickenRain Notes', '- Tạo shortcut cake console\r\n- Tạo CSDL\r\n- Tạo thư mục project từ giao diện dòng lệnh\r\n- Tạo bảng notes trong DB bằng SQL\r\n- Insert thêm dữ liệu vào DB', '2013-01-13 12:10:09', '2013-01-13 12:10:09'),
+(5, 'Tạo trang index notes cho ChickenRain Notes', '- Tạo Model Note.php\r\n- Tạo controller NotesController.php\r\n- Viết function index() đặt trong NotesController:\r\n  + Dùng find(''all'') để lấy dữ liệu từ DB\r\n  + Gởi dữ liệu lên view thông qua set()\r\n- Tạo view index.ctp đặt trong View/Notes\r\n- Chạy thử', '2013-01-13 14:10:09', '2013-02-19 13:03:53');
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Ta cũng tạo 
++ 1 Controller tên là NotesController 
++ 1 Model tên là /Table/NotesTable , /Entity/Note
++ 1 Thưc mục view đặt trong Template tên là Note. Trong đó cũng sẽ có các file view tương ứng với các action trong controller.
+
+/Controller/NotesController/index
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+public function index() {
+    /* Cách 1
+     Ta vẫn gọi trực tiếp đến model bằng cách gọi tên nó $this->Model
+     và sử dụng find($type , $optional) để thực hiện việc tìm kiếm data
+     */
+    // $notes = $this->Notes->find('all' , array('order' => array('created' => 'asc')));
+    // $this->set(compact('notes')); // Có thể sử dụng $this->set('notes' , $notes); như trong cakephp2.x
+    
+    /* Cách 2
+     Tạo 1 instance của lớp Notes Model và sử dụng nó (cách này đọc trong document)
+     */
+     $noteInstance = TableRegistry::get('Notes');
+     $notes = $noteInstance->find('all' , array('order' => array('created' => 'asc')));
+     
+     $this->set('notes' , $notes);
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+/Template/Notes/index.ctp
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+<script>
+function deleteNote() {
+    if (confirm('Bạn có muốn xóa ghi chú này không ?')) {
+        return true;
+    } else {
+        return false;
+    }
+}
+</script>
+
+<h2>Danh sách ghi chú</h2>
+<div>
+<ul>
+<?php foreach ($notes as $note) {?>
+    <li>
+        <?php echo $this->Html->link($note->title , '/notes/view/' . $note->id , array('target' => '_self')); ?> |
+        <?php 
+            echo $this->Html->link('Sửa' , '/notes/edit/' . $note->id , array(
+                    'target' => '_self' ,
+                    'class' => 'editNote'
+                    
+            ));
+        ?> | 
+        <?php 
+            echo $this->Html->link('Xóa' , '/notes/delete/' . $note->id , array(
+                    'target' => '_self' ,
+                    'class' => 'deleteNote' ,
+                    'onclick' => 'return deleteNote();'
+                    
+            ));
+        ?>
+    </li>
+<?php } ?>
+</ul>
+</div>
+
+<div style="margin-top: 20px;" id="addNote">
+<?php echo $this->Html->link('>> Thêm ghi chú mới' , '/notes/add/' , array(
+        'target' => '_self' , 
+        'onclick' => 'return addNewNote();'
+)); ?>
+</div>
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+[*** Đoạn sau sẽ bổ sung và giải thích thêm ***]
+
+
+
+Phân trang trong CakePHP3.x
+
+
+
+
+
+
+1.5.    Thêm hàm băm vào password
+Khi bạn them người dùng bằng chức năng add user , bạn sẽ thấy password được viết ở dạng chuỗi string, như vậy sẽ rất không tốt về mặt bảo mật.Và nhân tiện đây, tôi cũng muốn nói luôn về lớp Model trong CakePHP. 
+Việc băm password, các record đều được tiến hành, như vậy nó sẽ được thực thi như một đối tượng thực thể. 
+Bởi vì muốn set và băm password nên ta sẽ sử dụng mutator method/setter method. 
+Theo quy ước của CakePHP, khi set property của 1 đối tượng thực thể, ta gọi hàm setter. 
+Như vậy ta sẽ thêm 1 hàm setter vào trong lớp User trong file src/Model/Entity/User.php
+namespace App\Model\Entity;
+use Cake\Auth\DefaultPasswordHasher; // Khai báo thư viện này vào
+use Cake\ORM\Entity;
+
+class User extends Entity {
+    protected function _setPassword($value) {
+        $hasher = new DefaultPasswordHasher();
+        return $hasher->hash($value);
+    }
+}
+
+Trong CakePHP3 bằng cách sử dụng Entities Object thì khi ta có thể gọi đến protected method có dạng “_setXXX()” thì column XXX đó trước khi lưu vào database sẽ được thay đổi giá trị theo nội dung của method. 
+Tham khảo: http://gomocool.net/gomokulog/?p=657 
+
+1.6.    Thêm Tag và tìm kiếm bằng bookmark
+Đầu tiên ta sẽ thêm code vào router. Router giúp bạn điều hướng để thực hiện đường dẫn trên website của mình, để trình duyệt chuyển đến 1 controller hoặc action nào đó đã có sẵn theo mong muốn của lập trình viên.
+Đây là các router tĩnh được sử dụng
+Trong cakephp2.x thì router sẽ được định nghĩa như sau:
+/**
+ * ‘/’ đây là đường dẫn mặc định base path , định nghĩa này có nghĩa là từ root đi vào
+ * sẽ được chuyển hướng tới controller pages và tìm tới action tên là display hoặc
+ * là home -> Đây sẽ là trang chủ của website của bạn
+ **/
+Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
+/**
+ * Quy định mọi đường dẫn bắt đầu từ pages/* đều sẽ chuyển đến controller pages/display
+ */
+Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
+Tương tự trong cakephp3.x thì ta cũng sẽ thêm 1 router chuyển hướng vào trong file config/router
+Scope là 1 định nghĩa được sử dụng trong router. Scope là 1 bộ phận dùng chung của đường dẫn được định nghĩa trong đó option chính là routing defaut. Mọi liên kết bên trong scope sẽ được bọc và kế thừa từ scope chứa nó và default routing
+Router::defaultRouteClass('Route');
+// Thêm đoạn code này vào START
+Router::scope(
+    '/bookmarks',
+    ['controller' => 'Bookmarks'],
+    function ($routes) {
+// Nếu đường dẫn /bookmarks/tagged/* thì sẽ gọi đến action tags trong controller Bookmarks
+        $routes->connect('/tagged/*', ['action' => 'tags']);
+    }
+);
+// Thêm đoạn code này vào END
+
+Router::scope('/', function (RouteBuilder $routes) {
+    $routes->connect('/', [
+        'controller' => 'Pages', 
+        'action' => 'display', 'home'
+    ]);
+
+    $routes->connect('/pages/*', [
+        'controller' => 'Pages', 
+        'action' => 'display'
+    ]);
+
+    $routes->fallbacks('InflectedRoute'); //DashedRoute
+});
+
+
+
+
+2.  Myblog Tutorial
+ 
+ 
+
+
+Solution Xampp (Windows)
+1.  Open /xampp/php/php.ini
+2.  Change ;extension=php_intl.dll to extension=php_intl.dll (remove the semicolon)
+3.  Copy all the /xamp/php/ic*.dll files to /xampp/apache/bin
+4.  Restart apache in the Xampp control panel
+
+ 
+ 
+
+Cài trực tiếp bằng source trong workspace của eclipse và tạo 1 đường dẫn symbol link tới xampp/htdoc/ như sau
+mklink /d C:\xampp\htdocs\cakephp C:\VIEN_FOLDER\eclipse\workspace\cakephp
+
+
+
+Cake Console dùng để sinh code tự động trong php, nó là 1 giao diện dòng lệnh
+dùng để sinh code bằng cakephp một cách nhanh chóng.
+
+Cake console ngoài việc tạo project từ nó thì có thể tạo database có sẵn
+Nếu csdl ít table , ít quan hệ thì việc ta tự code cũng sẽ không quá vất
+vả nhưng nếu phát triển 1 project lớn, cần nhiều table, các bảng có quan
+hệ ràng buộc thì ta nên sử dụng cakeconsole để giúp ta phát triển nhanh
+hơn.
+
+Trước khi tạo model , view , controller thì ta cũng cần tạo 1 project
+
+Cài đặt biến môi trường 
+Chỉnh sửa path ở System Valiable
+Điền vào 2 đường dẫn đến file cakeconsole và đường dẫn đến php của xampp server 
+
+1. Tạo project với cakeconsole
+
+
+
+

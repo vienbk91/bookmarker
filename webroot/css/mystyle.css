@@ -1,0 +1,30 @@
+h2 {
+    color: orange;
+    font-weight: bold;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul , li {
+	margin: 10px 12px;
+}
+
+div#addNote a {
+	color: blue;
+}
+
+.editNote {
+	color: green;
+	font-size: small;
+}
+
+.deleteNote {
+	color: red;
+	font-size: small;
+}
+
+#content {
+	width: 100%;
+}
